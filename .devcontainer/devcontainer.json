@@ -8,9 +8,8 @@
 			"type": "volume"
 		}
 	],
-
-	"postCreateCommand": "rustc --version",
-	"customizations": {	
+	"postCreateCommand": "rustc --version ; rustup check",
+	"customizations": {
 		"vscode": {
 			"settings": {
 				"editor.formatOnSave": true
