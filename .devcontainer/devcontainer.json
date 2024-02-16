@@ -1,0 +1,29 @@
+{
+	"name": "Hands-on Rust",
+	"image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+	"mounts": [
+		{
+			"source": "devcontainer-cargo-cache-${devcontainerId}",
+			"target": "/usr/local/cargo",
+			"type": "volume"
+		}
+	],
+
+	"postCreateCommand": "rustc --version",
+	"customizations": {	
+		"vscode": {
+			"settings": {
+				"editor.formatOnSave": true
+			},
+			"extensions": [
+				"mhutchie.git-graph",
+				"rust-lang.rust-analyzer",
+				"serayuzgur.crates",
+				"vadimcn.vscode-lldb"
+			]
+		}
+	},
+	"features": {
+		"ghcr.io/lee-orr/rusty-dev-containers/wasm32-unknown-unknown:0": {}
+	}
+}
