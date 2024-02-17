@@ -1,12 +1,20 @@
 {
 	"name": "Hands-on Rust",
-	"image": "mcr.microsoft.com/devcontainers/rust:1-1-bullseye",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
 	"mounts": [
 		{
 			"source": "devcontainer-cargo-cache-${devcontainerId}",
 			"target": "/usr/local/cargo",
 			"type": "volume"
 		}
+	],
+	"runArgs": [
+		"--device=/dev/dri",
+		"--group-add",
+		"110"
 	],
 	"postCreateCommand": "rustc --version ; rustup check",
 	"customizations": {
