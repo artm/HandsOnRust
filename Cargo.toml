@@ -53,7 +53,8 @@ members = [
     "InventoryAndPowerUps/carrying_items",
     "DeeperDungeons/more_levels",
     "Loot/loot_tables",
-    "Loot/better_combat"
+    "Loot/better_combat",
+    "artm/treehouse",
 ]
 
 [profile.release]
