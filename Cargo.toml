@@ -54,7 +54,7 @@ members = [
     "DeeperDungeons/more_levels",
     "Loot/loot_tables",
     "Loot/better_combat",
-    "artm/treehouse",
+    "artm/treehouse", "artm/flappy",
 ]
 
 [profile.release]
