@@ -19,14 +19,18 @@ struct Player {
     x: i32,
     y: f32,
     velocity: f32,
+    frame: usize,
 }
 
 impl Player {
+    const FRAMES: [u16; 4] = [64, 65, 66, 65];
+
     fn new(x: i32, y: f32) -> Self {
         Self {
             x,
             y,
             velocity: 0.0,
+            frame: 0,
         }
     }
 
@@ -38,9 +42,9 @@ impl Player {
             0,
             Degrees::new(0.0),
             PointF::new(1.0, 1.0),
-            YELLOW,
+            WHEAT,
             NAVY,
-            to_cp437('@'),
+            Self::FRAMES[self.frame],
         );
         ctx.set_active_console(0);
     }
@@ -51,6 +55,7 @@ impl Player {
             self.velocity = TERMINAL_VELOCITY;
         }
         self.x += 1;
+        self.frame = (self.frame + 1) % Self::FRAMES.len();
         self.y += self.velocity;
         if self.y < 0.0 {
             self.y = 0.0;
@@ -147,6 +152,9 @@ impl State {
         }
         if self.player.y >= SCREEN_HEIGHT as f32 || self.obstacle.collides(&self.player) {
             self.mode = GameMode::GameOver;
+            ctx.set_active_console(1);
+            ctx.cls();
+            ctx.set_active_console(0);
         }
     }
 
