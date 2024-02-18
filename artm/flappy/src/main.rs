@@ -51,26 +51,30 @@ impl Player {
 
 struct Obstacle {
     x: i32,
+    h: i32,
     gap: i32,
 }
 
 impl Obstacle {
-    fn new(x: i32) -> Self {
-        Self {
-            x,
-            gap: SCREEN_HEIGHT / 3,
-        }
+    fn new(x: i32, score: i32) -> Self {
+        let mut random = RandomNumberGenerator::new();
+        let h = random.range(10, SCREEN_HEIGHT - 10);
+        let gap = i32::max(2, 20 - score);
+        Self { x, h, gap }
     }
 
     fn render(&mut self, ctx: &mut BTerm, player: &Player) {
         let x = self.x - player.x;
-        let h = (SCREEN_HEIGHT - self.gap) / 2;
-        for y in 0..h {
+        for y in 0..self.h {
             ctx.set(x, y, WHITE, RED, to_cp437(' '));
         }
-        for y in h + self.gap..SCREEN_HEIGHT {
+        for y in self.h + self.gap..SCREEN_HEIGHT {
             ctx.set(x, y, WHITE, RED, to_cp437(' '));
         }
+    }
+
+    fn collides(&self, player: &Player) -> bool {
+        self.x == player.x && (player.y < self.h || player.y >= self.h + self.gap)
     }
 }
 
@@ -79,6 +83,7 @@ struct State {
     player: Player,
     obstacle: Obstacle,
     frame_time: f32,
+    score: i32,
 }
 
 impl State {
@@ -86,8 +91,9 @@ impl State {
         State {
             mode: GameMode::MainMenu,
             player: Player::new(0, SCREEN_HEIGHT / 2),
-            obstacle: Obstacle::new(SCREEN_WIDTH),
+            obstacle: Obstacle::new(SCREEN_WIDTH, 0),
             frame_time: 0.0,
+            score: 0,
         }
     }
 
@@ -115,16 +121,17 @@ impl State {
         self.obstacle.render(ctx, &self.player);
         self.player.render(ctx);
         ctx.print(0, 0, "Press SPACE to flap");
-        ctx.print(0, 1, format!("Score: {}", 0));
+        ctx.print(0, 1, format!("Score: {}", self.score));
         if let Some(key) = ctx.key {
             if key == VirtualKeyCode::Space {
                 self.player.flap();
             }
         }
         if self.obstacle.x < self.player.x {
-            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH);
+            self.score += 1;
+            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
-        if self.player.y >= SCREEN_HEIGHT {
+        if self.player.y >= SCREEN_HEIGHT || self.obstacle.collides(&self.player) {
             self.mode = GameMode::GameOver;
         }
     }
@@ -132,8 +139,9 @@ impl State {
     fn end_menu(&mut self, ctx: &mut BTerm) {
         ctx.cls();
         ctx.print_centered(5, "Game Over");
-        ctx.print_centered(7, "(P) Play Again");
-        ctx.print_centered(9, "(Q) Quit");
+        ctx.print_centered(7, format!("Score: {}", self.score));
+        ctx.print_centered(9, "(P) Play Again");
+        ctx.print_centered(11, "(Q) Quit");
         if let Some(key) = ctx.key {
             match key {
                 VirtualKeyCode::P => self.reset(),
