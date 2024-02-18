@@ -157,6 +157,7 @@ impl State {
             self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
         }
         if self.player.y >= SCREEN_HEIGHT as f32 || self.obstacle.collides(&self.player) {
+            self.clear_fancy_console(ctx);
             self.mode = GameMode::GameOver;
         }
     }
@@ -182,6 +183,14 @@ impl State {
         self.obstacle = Obstacle::new(SCREEN_WIDTH, 0);
         self.frame_time = 0.0;
         self.score = 0;
+    }
+
+    fn clear_fancy_console(&self, ctx: &mut BTerm) {
+        // workaround https://github.com/amethyst/bracket-lib/issues/278
+        ctx.set_active_console(1);
+        ctx.cls();
+        ctx.set(0, 0, NONE, NONE, 0);
+        ctx.set_active_console(0);
     }
 }
 
