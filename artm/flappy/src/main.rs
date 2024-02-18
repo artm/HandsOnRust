@@ -23,7 +23,7 @@ struct Player {
 }
 
 impl Player {
-    const FRAMES: [u16; 4] = [64, 65, 66, 65];
+    const FRAMES: [u16; 4] = [64, 1, 2, 1];
 
     fn new(x: i32, y: f32) -> Self {
         Self {
@@ -41,7 +41,7 @@ impl Player {
             PointF::new(0.0, self.y),
             0,
             Degrees::new(0.0),
-            PointF::new(1.0, 1.0),
+            PointF::new(2.0, 2.0),
             WHEAT,
             NAVY,
             Self::FRAMES[self.frame],
@@ -152,9 +152,6 @@ impl State {
         }
         if self.player.y >= SCREEN_HEIGHT as f32 || self.obstacle.collides(&self.player) {
             self.mode = GameMode::GameOver;
-            ctx.set_active_console(1);
-            ctx.cls();
-            ctx.set_active_console(0);
         }
     }
 
@@ -191,7 +188,7 @@ impl GameState for State {
 }
 
 fn main() -> BError {
-    let font = "../resources/16x16_sm_ascii.png";
+    let font = "../resources/flappy-16x16.png";
     let context = BTermBuilder::new()
         .with_font(font, 16, 16)
         .with_simple_console(SCREEN_WIDTH, SCREEN_HEIGHT, font)
