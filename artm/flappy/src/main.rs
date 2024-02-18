@@ -1,5 +1,12 @@
 use bracket_lib::prelude::*;
 
+const SCREEN_WIDTH: i32 = 80;
+const SCREEN_HEIGHT: i32 = 50;
+const FRAME_DURATION: f32 = 75.0;
+const FLAP_VELOCITY: f32 = -2.0;
+const TERMINAL_VELOCITY: f32 = 2.0;
+const GRAVITY_DV: f32 = 0.2;
+
 enum GameMode {
     MainMenu,
     Playing,
@@ -26,9 +33,9 @@ impl Player {
     }
 
     fn physics(&mut self) {
-        self.velocity += 0.2;
-        if self.velocity > 2.0 {
-            self.velocity = 2.0;
+        self.velocity += GRAVITY_DV;
+        if self.velocity > TERMINAL_VELOCITY {
+            self.velocity = TERMINAL_VELOCITY;
         }
         self.x += 1;
         self.y += self.velocity as i32;
@@ -38,7 +45,7 @@ impl Player {
     }
 
     fn flap(&mut self) {
-        self.velocity = -2.0;
+        self.velocity = FLAP_VELOCITY;
     }
 }
 struct State {
@@ -51,7 +58,7 @@ impl State {
     fn new() -> Self {
         State {
             mode: GameMode::MainMenu,
-            player: Player::new(0, 25),
+            player: Player::new(0, SCREEN_HEIGHT / 2),
             frame_time: 0.0,
         }
     }
@@ -72,21 +79,19 @@ impl State {
 
     fn play(&mut self, ctx: &mut BTerm) {
         self.frame_time += ctx.frame_time_ms;
-        if self.frame_time > 75.0 {
+        if self.frame_time > FRAME_DURATION {
             self.player.physics();
             self.frame_time = 0.0;
         }
         ctx.cls_bg(NAVY);
         self.player.render(ctx);
-
-        if self.player.y >= 50 {
-            self.mode = GameMode::GameOver;
-        }
         if let Some(key) = ctx.key {
-            match key {
-                VirtualKeyCode::Space => self.player.flap(),
-                _ => {}
+            if key == VirtualKeyCode::Space {
+                self.player.flap();
             }
+        }
+        if self.player.y >= SCREEN_HEIGHT {
+            self.mode = GameMode::GameOver;
         }
     }
 
@@ -105,7 +110,7 @@ impl State {
     }
 
     fn reset(&mut self) {
-        self.player = Player::new(5, 25);
+        self.player = Player::new(5, SCREEN_HEIGHT / 2);
         self.mode = GameMode::Playing;
         self.frame_time = 0.0;
     }
