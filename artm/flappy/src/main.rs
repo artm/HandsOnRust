@@ -1,11 +1,13 @@
 use bracket_lib::prelude::*;
 
-const SCREEN_WIDTH: i32 = 80;
-const SCREEN_HEIGHT: i32 = 50;
+const SCREEN_WIDTH: i32 = 40;
+const SCREEN_HEIGHT: i32 = 24;
 const FRAME_DURATION: f32 = 80.0;
 const FLAP_VELOCITY: f32 = -2.0;
 const TERMINAL_VELOCITY: f32 = 2.0;
 const GRAVITY_DV: f32 = 0.2;
+const MIN_GAP: i32 = 2;
+const MAX_GAP: i32 = 18;
 
 enum GameMode {
     MainMenu,
@@ -58,8 +60,8 @@ struct Obstacle {
 impl Obstacle {
     fn new(x: i32, score: i32) -> Self {
         let mut random = RandomNumberGenerator::new();
-        let h = random.range(10, SCREEN_HEIGHT - 10);
-        let gap = i32::max(2, 20 - score);
+        let gap = i32::max(MIN_GAP, MAX_GAP - score);
+        let h = random.range(2, SCREEN_HEIGHT - gap - 2);
         Self { x, h, gap }
     }
 
@@ -169,8 +171,12 @@ impl GameState for State {
 }
 
 fn main() -> BError {
-    let context = BTermBuilder::simple80x50()
+    let font = "../resources/16x16_sm_ascii.png";
+    let context = BTermBuilder::new()
+        .with_font(font, 16, 16)
+        .with_simple_console(SCREEN_WIDTH, SCREEN_HEIGHT, font)
         .with_title("Flappy Dragon")
+        .with_tile_dimensions(16, 16)
         .build()?;
     main_loop(context, State::new())
 }
