@@ -8,6 +8,12 @@ const TERMINAL_VELOCITY: f32 = 2.0;
 const GRAVITY_DV: f32 = 0.2;
 const MIN_GAP: i32 = 2;
 const MAX_GAP: i32 = 18;
+const NONE: RGBA = RGBA {
+    r: 0.0,
+    g: 0.0,
+    b: 0.0,
+    a: 0.0,
+};
 
 enum GameMode {
     MainMenu,
@@ -43,7 +49,7 @@ impl Player {
             Degrees::new(0.0),
             PointF::new(2.0, 2.0),
             WHEAT,
-            NAVY,
+            NONE,
             Self::FRAMES[self.frame],
         );
         ctx.set_active_console(0);
