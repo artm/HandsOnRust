@@ -107,7 +107,7 @@ struct State {
 
 impl State {
     fn new() -> Self {
-        State {
+        Self {
             mode: GameMode::MainMenu,
             player: Player::new(0, SCREEN_HEIGHT as f32 / 2.0),
             obstacle: Obstacle::new(SCREEN_WIDTH, 0),
@@ -171,9 +171,11 @@ impl State {
     }
 
     fn reset(&mut self) {
-        self.player = Player::new(0, SCREEN_HEIGHT as f32 / 2.0);
         self.mode = GameMode::Playing;
+        self.player = Player::new(0, SCREEN_HEIGHT as f32 / 2.0);
+        self.obstacle = Obstacle::new(SCREEN_WIDTH, 0);
         self.frame_time = 0.0;
+        self.score = 0;
     }
 }
 
