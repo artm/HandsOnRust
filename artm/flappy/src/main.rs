@@ -2,7 +2,7 @@ use bracket_lib::prelude::*;
 
 const SCREEN_WIDTH: i32 = 80;
 const SCREEN_HEIGHT: i32 = 50;
-const FRAME_DURATION: f32 = 75.0;
+const FRAME_DURATION: f32 = 80.0;
 const FLAP_VELOCITY: f32 = -2.0;
 const TERMINAL_VELOCITY: f32 = 2.0;
 const GRAVITY_DV: f32 = 0.2;
@@ -48,9 +48,36 @@ impl Player {
         self.velocity = FLAP_VELOCITY;
     }
 }
+
+struct Obstacle {
+    x: i32,
+    gap: i32,
+}
+
+impl Obstacle {
+    fn new(x: i32) -> Self {
+        Self {
+            x,
+            gap: SCREEN_HEIGHT / 3,
+        }
+    }
+
+    fn render(&mut self, ctx: &mut BTerm, player: &Player) {
+        let x = self.x - player.x;
+        let h = (SCREEN_HEIGHT - self.gap) / 2;
+        for y in 0..h {
+            ctx.set(x, y, WHITE, RED, to_cp437(' '));
+        }
+        for y in h + self.gap..SCREEN_HEIGHT {
+            ctx.set(x, y, WHITE, RED, to_cp437(' '));
+        }
+    }
+}
+
 struct State {
     mode: GameMode,
     player: Player,
+    obstacle: Obstacle,
     frame_time: f32,
 }
 
@@ -59,6 +86,7 @@ impl State {
         State {
             mode: GameMode::MainMenu,
             player: Player::new(0, SCREEN_HEIGHT / 2),
+            obstacle: Obstacle::new(SCREEN_WIDTH),
             frame_time: 0.0,
         }
     }
@@ -78,17 +106,23 @@ impl State {
     }
 
     fn play(&mut self, ctx: &mut BTerm) {
+        ctx.cls_bg(NAVY);
         self.frame_time += ctx.frame_time_ms;
         if self.frame_time > FRAME_DURATION {
             self.player.physics();
             self.frame_time = 0.0;
         }
-        ctx.cls_bg(NAVY);
+        self.obstacle.render(ctx, &self.player);
         self.player.render(ctx);
+        ctx.print(0, 0, "Press SPACE to flap");
+        ctx.print(0, 1, format!("Score: {}", 0));
         if let Some(key) = ctx.key {
             if key == VirtualKeyCode::Space {
                 self.player.flap();
             }
+        }
+        if self.obstacle.x < self.player.x {
+            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH);
         }
         if self.player.y >= SCREEN_HEIGHT {
             self.mode = GameMode::GameOver;
@@ -110,7 +144,7 @@ impl State {
     }
 
     fn reset(&mut self) {
-        self.player = Player::new(5, SCREEN_HEIGHT / 2);
+        self.player = Player::new(0, SCREEN_HEIGHT / 2);
         self.mode = GameMode::Playing;
         self.frame_time = 0.0;
     }
