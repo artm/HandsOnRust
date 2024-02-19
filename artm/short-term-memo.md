@@ -1,11 +1,12 @@
-map has a vec of tiles
-map_idx converts x y to index
-map's render renders tiles
-main
-    has state
-        contains a map
-        implements game state
-        renders map in tick
-    in main()
-        constructs ctx
-        starts main loop with ctx and state
+map
+    in_bounds
+    can_enter
+    try_idx -> Option<usize>
+player has own module
+    and add to prelude
+    struct
+        position (bracket-lib's Point)
+        render as @
+        update
+            reacts to motion keys
+            uses can_enter
