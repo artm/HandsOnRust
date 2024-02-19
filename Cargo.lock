@@ -684,6 +684,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "dungeoncrawler"
+version = "0.1.0"
+dependencies = [
+ "bracket-lib",
+]
+
+[[package]]
 name = "dungeonecs"
 version = "0.1.0"
 dependencies = [

@@ -1,0 +1,5 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "./artm/dungeoncrawler/Cargo.toml"
+    ]
+}
