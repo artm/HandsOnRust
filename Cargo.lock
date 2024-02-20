@@ -688,6 +688,7 @@ name = "dungeoncrawler"
 version = "0.1.0"
 dependencies = [
  "bracket-lib",
+ "itertools 0.12.1",
 ]
 
 [[package]]
@@ -1036,6 +1037,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "itertools"
+version = "0.12.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+dependencies = [
+ "either",
+]
+
+[[package]]
 name = "jni-sys"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1095,7 +1105,7 @@ dependencies = [
  "derivative",
  "downcast-rs",
  "erased-serde",
- "itertools",
+ "itertools 0.9.0",
  "legion_codegen",
  "parking_lot",
  "paste",

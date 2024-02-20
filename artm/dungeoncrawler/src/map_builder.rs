@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use itertools::Itertools;
 
 const MAX_NUM_CHAMBERS: usize = 20;
 const MIN_CHAMBER_WIDTH: i32 = 5;
@@ -48,6 +49,20 @@ impl MapBuilder {
         }
         self.chambers
             .sort_by(|a, b| a.center().x.cmp(&b.center().x));
+        for (a, b) in self.chambers.iter().tuple_windows() {
+            let (a, b) = (a.center(), b.center());
+            let (x0, y0) = if rand.rand() { (a.x, b.y) } else { (b.x, a.y) };
+            for y in i32::min(a.y, b.y)..=i32::max(a.y, b.y) {
+                if let Some(i) = self.map.try_idx(x0, y) {
+                    self.map.tiles[i] = TileType::Floor;
+                }
+            }
+            for x in i32::min(a.x, b.x)..=i32::max(a.x, b.x) {
+                if let Some(i) = self.map.try_idx(x, y0) {
+                    self.map.tiles[i] = TileType::Floor;
+                }
+            }
+        }
         self.player_pos = self.chambers[0].center();
     }
 
