@@ -31,7 +31,7 @@ impl Map {
         for (i, tile) in self.tiles.iter().enumerate() {
             let (x, y) = self.map_xy(i);
             match tile {
-                TileType::Wall => ctx.set(x, y, WHITE, BROWN1, to_cp437('#')),
+                TileType::Wall => ctx.set(x, y, GREEN, BROWN1, to_cp437('#')),
                 TileType::Floor => ctx.set(x, y, WHEAT, BLACK, to_cp437('.')),
             }
         }
