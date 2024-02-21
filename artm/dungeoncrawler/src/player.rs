@@ -4,7 +4,7 @@ const PLAYER_FG: (u8, u8, u8) = YELLOW;
 const PLAYER_BG: (u8, u8, u8) = BLACK;
 
 pub struct Player {
-    pos: Point,
+    pub pos: Point,
 }
 
 impl Player {
@@ -12,8 +12,14 @@ impl Player {
         Self { pos }
     }
 
-    pub fn render(&self, ctx: &mut BTerm) {
-        ctx.set(self.pos.x, self.pos.y, PLAYER_FG, PLAYER_BG, to_cp437('@'));
+    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
+        ctx.set(
+            self.pos.x - camera.fov.x1,
+            self.pos.y - camera.fov.y1,
+            PLAYER_FG,
+            PLAYER_BG,
+            to_cp437('@'),
+        );
     }
 
     pub fn update(&mut self, ctx: &mut BTerm, map: &Map) {

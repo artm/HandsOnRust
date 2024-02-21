@@ -3,9 +3,9 @@ use itertools::Itertools;
 
 const MAX_NUM_CHAMBERS: usize = 20;
 const MIN_CHAMBER_WIDTH: i32 = 5;
-const MAX_CHAMBER_WIDTH: i32 = SCREEN_WIDTH / 5;
+const MAX_CHAMBER_WIDTH: i32 = WORLD_WIDTH / 5;
 const MIN_CHAMBER_HEIGHT: i32 = 5;
-const MAX_CHAMBER_HEIGHT: i32 = SCREEN_HEIGHT / 3;
+const MAX_CHAMBER_HEIGHT: i32 = WORLD_HEIGHT / 3;
 
 pub struct MapBuilder {
     pub map: Map,
@@ -18,25 +18,25 @@ impl MapBuilder {
         Self {
             map: Map::new(),
             chambers: vec![],
-            player_pos: Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2),
+            player_pos: Point::new(WORLD_WIDTH / 2, WORLD_HEIGHT / 2),
         }
     }
 
     pub fn build(&mut self, rand: &mut RandomNumberGenerator) {
         self.fill(
-            Rect::with_size(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT),
+            Rect::with_size(0, 0, WORLD_WIDTH, WORLD_HEIGHT),
             TileType::Wall,
         );
 
         while self.chambers.len() < MAX_NUM_CHAMBERS {
-            let x = rand.range(1, SCREEN_WIDTH - MIN_CHAMBER_WIDTH - 1);
-            let y = rand.range(1, SCREEN_HEIGHT - MIN_CHAMBER_HEIGHT - 1);
+            let x = rand.range(1, WORLD_WIDTH - MIN_CHAMBER_WIDTH - 1);
+            let y = rand.range(1, WORLD_HEIGHT - MIN_CHAMBER_HEIGHT - 1);
             let w = i32::min(
-                SCREEN_WIDTH - x - 2,
+                WORLD_WIDTH - x - 2,
                 rand.range(MIN_CHAMBER_WIDTH, MAX_CHAMBER_WIDTH),
             );
             let h = i32::min(
-                SCREEN_HEIGHT - y - 2,
+                WORLD_HEIGHT - y - 2,
                 rand.range(MIN_CHAMBER_HEIGHT, MAX_CHAMBER_HEIGHT),
             );
             let r = Rect::with_size(x, y, w, h);
