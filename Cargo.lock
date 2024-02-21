@@ -689,6 +689,7 @@ version = "0.1.0"
 dependencies = [
  "bracket-lib",
  "itertools 0.12.1",
+ "legion",
 ]
 
 [[package]]

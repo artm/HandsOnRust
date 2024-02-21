@@ -1,49 +1,60 @@
 mod camera;
+mod components;
 mod map;
 mod map_builder;
-mod player;
+mod spawner;
+mod systems;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
+    pub use legion::systems::CommandBuffer;
+    pub use legion::world::SubWorld;
+    pub use legion::*;
     pub const WORLD_WIDTH: i32 = 80;
     pub const WORLD_HEIGHT: i32 = 80;
-    pub const DISPLAY_WIDTH: i32 = 32;
-    pub const DISPLAY_HEIGHT: i32 = 18;
+    pub const DISPLAY_WIDTH: i32 = 18;
+    pub const DISPLAY_HEIGHT: i32 = 32;
     pub use crate::camera::*;
+    pub use crate::components::*;
     pub use crate::map::*;
     pub use crate::map_builder::*;
-    pub use crate::player::*;
+    pub use crate::spawner::*;
+    pub use crate::systems::*;
 }
 use prelude::*;
 
 struct State {
-    map: Map,
-    player: Player,
-    camera: Camera,
+    world: World,
+    resources: Resources,
+    systems: Schedule,
 }
 
 impl State {
     fn new() -> Self {
         let mut map_builder = MapBuilder::new();
         map_builder.build(&mut RandomNumberGenerator::new());
+        let mut world = World::default();
+        let mut resources = Resources::default();
+        spawn_player(&mut world, map_builder.player_pos);
+        resources.insert(map_builder.map);
+        resources.insert(Camera::new(map_builder.player_pos));
         Self {
-            map: map_builder.map,
-            player: Player::new(map_builder.player_pos),
-            camera: Camera::new(map_builder.player_pos),
+            world,
+            resources,
+            systems: build_scheduler(),
         }
     }
 }
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        self.player.update(ctx, &self.map);
-        self.camera.update(self.player.pos);
         ctx.set_active_console(0);
         ctx.cls();
-        self.map.render(ctx, &self.camera);
         ctx.set_active_console(1);
         ctx.cls();
-        self.player.render(ctx, &self.camera);
+        self.resources.insert(ctx.key);
+        self.systems.execute(&mut self.world, &mut self.resources);
+        render_draw_buffer(ctx).expect("Render error");
     }
 }
 

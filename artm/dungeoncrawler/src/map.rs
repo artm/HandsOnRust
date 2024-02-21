@@ -23,41 +23,6 @@ impl Map {
         (x + y * WORLD_WIDTH) as usize
     }
 
-    pub fn map_xy(&self, idx: usize) -> (i32, i32) {
-        (idx as i32 % WORLD_WIDTH, idx as i32 / WORLD_WIDTH)
-    }
-
-    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
-        let x1 = i32::max(0, camera.fov.x1);
-        let x2 = i32::min(WORLD_WIDTH - 1, camera.fov.x2);
-        let y1 = i32::max(0, camera.fov.y1);
-        let y2 = i32::min(WORLD_HEIGHT - 1, camera.fov.y2);
-
-        for x in x1..=x2 {
-            for y in y1..=y2 {
-                if let Some(i) = self.try_idx(x, y) {
-                    let tile = self.tiles[i];
-                    match tile {
-                        TileType::Wall => ctx.set(
-                            x - camera.fov.x1,
-                            y - camera.fov.y1,
-                            WHITE,
-                            BLACK,
-                            to_cp437('#'),
-                        ),
-                        TileType::Floor => ctx.set(
-                            x - camera.fov.x1,
-                            y - camera.fov.y1,
-                            WHITE,
-                            BLACK,
-                            to_cp437('.'),
-                        ),
-                    }
-                }
-            }
-        }
-    }
-
     pub fn in_bounds(&self, x: i32, y: i32) -> bool {
         (0..WORLD_WIDTH).contains(&x) && (0..WORLD_HEIGHT).contains(&y)
     }
