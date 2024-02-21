@@ -1,8 +1,5 @@
 use crate::prelude::*;
 
-const PLAYER_FG: (u8, u8, u8) = YELLOW;
-const PLAYER_BG: (u8, u8, u8) = BLACK;
-
 pub struct Player {
     pub pos: Point,
 }
@@ -16,8 +13,8 @@ impl Player {
         ctx.set(
             self.pos.x - camera.fov.x1,
             self.pos.y - camera.fov.y1,
-            PLAYER_FG,
-            PLAYER_BG,
+            WHITE,
+            BLACK,
             to_cp437('@'),
         );
     }

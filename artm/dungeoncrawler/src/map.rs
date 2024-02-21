@@ -41,14 +41,14 @@ impl Map {
                         TileType::Wall => ctx.set(
                             x - camera.fov.x1,
                             y - camera.fov.y1,
-                            GREEN,
-                            BROWN1,
+                            WHITE,
+                            BLACK,
                             to_cp437('#'),
                         ),
                         TileType::Floor => ctx.set(
                             x - camera.fov.x1,
                             y - camera.fov.y1,
-                            WHEAT,
+                            WHITE,
                             BLACK,
                             to_cp437('.'),
                         ),
@@ -59,7 +59,7 @@ impl Map {
     }
 
     pub fn in_bounds(&self, x: i32, y: i32) -> bool {
-        x >= 0 && x < WORLD_WIDTH && y >= 0 && y < WORLD_HEIGHT
+        (0..WORLD_WIDTH).contains(&x) && (0..WORLD_HEIGHT).contains(&y)
     }
 
     pub fn can_enter(&self, x: i32, y: i32) -> bool {
