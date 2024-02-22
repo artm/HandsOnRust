@@ -22,10 +22,11 @@ pub fn spawn_enemy(world: &mut World, pos: Point, rand: &mut RandomNumberGenerat
 
     world.push((
         Enemy,
+        RandomWalk,
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
-            glyph: glyph,
+            glyph,
         },
     ));
 }
