@@ -8,6 +8,7 @@ pub fn player_input(
     #[resource] map: &Map,
     #[resource] key: &Option<VirtualKeyCode>,
     #[resource] camera: &mut Camera,
+    #[resource] turn: &mut Turn,
 ) {
     if let Some(key) = key {
         let delta = match key {
@@ -24,6 +25,7 @@ pub fn player_input(
                 if map.can_enter(newpos.x, newpos.y) {
                     *pos = newpos;
                     camera.update(newpos);
+                    *turn = Turn::PlayerTurn;
                 }
             });
         }

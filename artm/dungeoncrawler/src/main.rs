@@ -4,6 +4,7 @@ mod map;
 mod map_builder;
 mod spawner;
 mod systems;
+mod turn;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
@@ -20,13 +21,16 @@ mod prelude {
     pub use crate::map_builder::*;
     pub use crate::spawner::*;
     pub use crate::systems::*;
+    pub use crate::turn::*;
 }
 use prelude::*;
 
 struct State {
     world: World,
     resources: Resources,
-    systems: Schedule,
+    input_schedule: Schedule,
+    player_schedule: Schedule,
+    monsters_schedule: Schedule,
 }
 
 impl State {
@@ -45,10 +49,13 @@ impl State {
             .for_each(|pos| spawn_enemy(&mut world, pos, &mut rand));
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_pos));
+        resources.insert(Turn::ExpectingInput);
         Self {
             world,
             resources,
-            systems: build_scheduler(),
+            input_schedule: build_input_scheduler(),
+            player_schedule: build_player_scheduler(),
+            monsters_schedule: build_monsters_scheduler(),
         }
     }
 }
@@ -60,7 +67,18 @@ impl GameState for State {
         ctx.set_active_console(1);
         ctx.cls();
         self.resources.insert(ctx.key);
-        self.systems.execute(&mut self.world, &mut self.resources);
+        let turn = self.resources.get::<Turn>().unwrap().clone();
+        match turn {
+            Turn::ExpectingInput => self
+                .input_schedule
+                .execute(&mut self.world, &mut self.resources),
+            Turn::PlayerTurn => self
+                .player_schedule
+                .execute(&mut self.world, &mut self.resources),
+            Turn::MonstersTurn => self
+                .monsters_schedule
+                .execute(&mut self.world, &mut self.resources),
+        }
         render_draw_buffer(ctx).expect("Render error");
     }
 }

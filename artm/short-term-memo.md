@@ -15,7 +15,7 @@ turn state is a resource
 end turn system
     replaces turn state with the next
         not for awaiting input
-    player input advances to player turn after motion input
+player input advances to player turn after motion input
 schedulers
     split base on turn state
     build all three
