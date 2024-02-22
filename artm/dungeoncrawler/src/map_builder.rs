@@ -9,7 +9,7 @@ const MAX_CHAMBER_HEIGHT: i32 = WORLD_HEIGHT / 3;
 
 pub struct MapBuilder {
     pub map: Map,
-    chambers: Vec<Rect>,
+    pub chambers: Vec<Rect>,
     pub player_pos: Point,
 }
 

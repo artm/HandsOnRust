@@ -31,11 +31,18 @@ struct State {
 
 impl State {
     fn new() -> Self {
-        let mut map_builder = MapBuilder::new();
-        map_builder.build(&mut RandomNumberGenerator::new());
+        let mut rand = RandomNumberGenerator::new();
         let mut world = World::default();
+        let mut map_builder = MapBuilder::new();
+        map_builder.build(&mut rand);
         let mut resources = Resources::default();
         spawn_player(&mut world, map_builder.player_pos);
+        map_builder
+            .chambers
+            .iter()
+            .skip(1)
+            .map(|chamber| chamber.center())
+            .for_each(|pos| spawn_enemy(&mut world, pos, &mut rand));
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_pos));
         Self {
