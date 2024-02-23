@@ -13,10 +13,9 @@ pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
 
     for x in x1..=x2 {
         for y in y1..=y2 {
-            if let Some(i) = map.try_idx(x, y) {
+            let pos = Point::new(x, y);
+            if let Some(i) = map.try_idx(pos) {
                 let tile = map.tiles[i];
-                let pos = Point::new(x, y);
-
                 let glyph = match tile {
                     TileType::Wall => to_cp437('#'),
                     TileType::Floor => to_cp437('.'),

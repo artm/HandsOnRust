@@ -19,21 +19,21 @@ impl Map {
         }
     }
 
-    pub fn map_idx(&self, x: i32, y: i32) -> usize {
-        (x + y * WORLD_WIDTH) as usize
+    pub fn map_idx(&self, pos: Point) -> usize {
+        (pos.x + pos.y * WORLD_WIDTH) as usize
     }
 
-    pub fn in_bounds(&self, x: i32, y: i32) -> bool {
-        (0..WORLD_WIDTH).contains(&x) && (0..WORLD_HEIGHT).contains(&y)
+    pub fn in_bounds(&self, pos: Point) -> bool {
+        (0..WORLD_WIDTH).contains(&pos.x) && (0..WORLD_HEIGHT).contains(&pos.y)
     }
 
-    pub fn can_enter(&self, x: i32, y: i32) -> bool {
-        self.in_bounds(x, y) && self.tiles[self.map_idx(x, y)] == TileType::Floor
+    pub fn can_enter(&self, pos: Point) -> bool {
+        self.in_bounds(pos) && self.tiles[self.map_idx(pos)] == TileType::Floor
     }
 
-    pub fn try_idx(&self, x: i32, y: i32) -> Option<usize> {
-        if self.in_bounds(x, y) {
-            Some(self.map_idx(x, y))
+    pub fn try_idx(&self, pos: Point) -> Option<usize> {
+        if self.in_bounds(pos) {
+            Some(self.map_idx(pos))
         } else {
             None
         }

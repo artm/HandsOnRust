@@ -10,7 +10,7 @@ pub fn motion(
     ecs: &mut SubWorld,
     commands: &mut CommandBuffer,
 ) {
-    if map.can_enter(motion.destination.x, motion.destination.y) {
+    if map.can_enter(motion.destination) {
         commands.add_component(motion.entity, motion.destination);
 
         if ecs

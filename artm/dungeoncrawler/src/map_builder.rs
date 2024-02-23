@@ -53,12 +53,12 @@ impl MapBuilder {
             let (a, b) = (a.center(), b.center());
             let (x0, y0) = if rand.rand() { (a.x, b.y) } else { (b.x, a.y) };
             for y in i32::min(a.y, b.y)..=i32::max(a.y, b.y) {
-                if let Some(i) = self.map.try_idx(x0, y) {
+                if let Some(i) = self.map.try_idx(Point::new(x0, y)) {
                     self.map.tiles[i] = TileType::Floor;
                 }
             }
             for x in i32::min(a.x, b.x)..=i32::max(a.x, b.x) {
-                if let Some(i) = self.map.try_idx(x, y0) {
+                if let Some(i) = self.map.try_idx(Point::new(x, y0)) {
                     self.map.tiles[i] = TileType::Floor;
                 }
             }
@@ -68,7 +68,7 @@ impl MapBuilder {
 
     fn fill(&mut self, rect: Rect, filler: TileType) {
         rect.for_each(|point| {
-            if let Some(i) = self.map.try_idx(point.x, point.y) {
+            if let Some(i) = self.map.try_idx(point) {
                 self.map.tiles[i] = filler
             }
         });
