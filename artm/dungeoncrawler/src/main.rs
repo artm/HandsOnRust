@@ -15,6 +15,11 @@ mod prelude {
     pub const WORLD_HEIGHT: i32 = 80;
     pub const DISPLAY_WIDTH: i32 = 18;
     pub const DISPLAY_HEIGHT: i32 = 32;
+    pub const DIR_LEFT: Point = Point { x: -1, y: 0 };
+    pub const DIR_RIGHT: Point = Point { x: 1, y: 0 };
+    pub const DIR_UP: Point = Point { x: 0, y: -1 };
+    pub const DIR_DOWN: Point = Point { x: 0, y: 1 };
+    pub const DIRS: [Point; 4] = [DIR_LEFT, DIR_RIGHT, DIR_UP, DIR_DOWN];
     pub use crate::camera::*;
     pub use crate::components::*;
     pub use crate::map::*;

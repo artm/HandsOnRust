@@ -11,10 +11,10 @@ pub fn player_input(
 ) {
     if let Some(key) = key {
         let delta = match key {
-            VirtualKeyCode::Left => Point::new(-1, 0),
-            VirtualKeyCode::Down => Point::new(0, 1),
-            VirtualKeyCode::Up => Point::new(0, -1),
-            VirtualKeyCode::Right => Point::new(1, 0),
+            VirtualKeyCode::Left => DIR_LEFT,
+            VirtualKeyCode::Right => DIR_RIGHT,
+            VirtualKeyCode::Up => DIR_UP,
+            VirtualKeyCode::Down => DIR_DOWN,
             _ => Point::zero(),
         };
         <(Entity, &Point, &Player)>::query()
