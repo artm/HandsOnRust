@@ -1,22 +1,21 @@
-# random move
+# intent messages
 
-tag
-system
-flush schedule after collisions
-    so removed entities aren't considered for random motion
+component: motion intent
+    entity
+    destination (pos)
+motion systen
+    for_each
+    handle motion
+    remove the message entity
+insert the system in player/monster schedules
+generate motion intent messages inside player input and random walk
 
-# turn based
+# restruct
 
-turn state
-    awaiting input
-    player
-    monsters
-turn state is a resource
-end turn system
-    replaces turn state with the next
-        not for awaiting input
-player input advances to player turn after motion input
-schedulers
-    split base on turn state
-    build all three
-    execute the right one based on current state
+let map can enter accept point and fix all calls
+consts for cardinal directions and reuse that in that one array of deltas
+
+# review
+
+tuples: tuples of single value don't exist?
+legion's CommandBuffer::push()

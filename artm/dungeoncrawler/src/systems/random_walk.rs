@@ -9,16 +9,19 @@ const DELTAS: [Point; 4] = [
 
 #[system]
 #[read_component(RandomWalk)]
-#[write_component(Point)]
-pub fn random_walk(ecs: &mut SubWorld, #[resource] map: &Map) {
+#[read_component(Point)]
+pub fn random_walk(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
     let mut rand = RandomNumberGenerator::new();
-    <(&mut Point, &RandomWalk)>::query()
-        .iter_mut(ecs)
-        .for_each(|(pos, _)| {
+    <(Entity, &Point, &RandomWalk)>::query()
+        .iter(ecs)
+        .for_each(|(entity, pos, _)| {
             let delta = DELTAS[rand.range(0, 4)];
-            let newpos = *pos + delta;
-            if map.can_enter(newpos.x, newpos.y) {
-                *pos = newpos;
-            }
+            commands.push((
+                (),
+                MotionIntent {
+                    entity: *entity,
+                    destination: *pos + delta,
+                },
+            ));
         });
 }
