@@ -10,6 +10,10 @@ pub fn spawn_player(world: &mut World, pos: Point) {
             color: ColorPair::new(WHITE, BLACK),
             glyph: to_cp437('@'),
         },
+        Health {
+            current: 15,
+            max: 20,
+        },
     ));
 }
 

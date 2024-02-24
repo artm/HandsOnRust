@@ -15,6 +15,8 @@ mod prelude {
     pub const WORLD_HEIGHT: i32 = 80;
     pub const DISPLAY_WIDTH: i32 = 18;
     pub const DISPLAY_HEIGHT: i32 = 32;
+    pub const HUD_WIDTH: i32 = DISPLAY_WIDTH * 4;
+    pub const HUD_HEIGHT: i32 = DISPLAY_HEIGHT * 4;
     pub const DIR_LEFT: Point = Point { x: -1, y: 0 };
     pub const DIR_RIGHT: Point = Point { x: 1, y: 0 };
     pub const DIR_UP: Point = Point { x: 0, y: -1 };
@@ -67,10 +69,10 @@ impl State {
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
-        ctx.set_active_console(0);
-        ctx.cls();
-        ctx.set_active_console(1);
-        ctx.cls();
+        for i in 0..3 {
+            ctx.set_active_console(i);
+            ctx.cls();
+        }
         self.resources.insert(ctx.key);
         let turn = self.resources.get::<Turn>().unwrap().clone();
         match turn {
@@ -96,8 +98,10 @@ fn main() -> BError {
         .with_fps_cap(30.0)
         .with_resource_path("resources/")
         .with_font("dungeonfont.png", 32, 32)
+        .with_font("terminal8x8.png", 8, 8)
         .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
         .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeonfont.png")
+        .with_simple_console_no_bg(HUD_WIDTH, HUD_HEIGHT, "terminal8x8.png")
         .with_fullscreen(true)
         .build()?;
     main_loop(ctx, State::new())
