@@ -4,7 +4,7 @@ use crate::prelude::*;
 #[read_component(Player)]
 pub fn motion(
     entity: &Entity,
-    motion: &MotionIntent,
+    motion: &WantsToMove,
     #[resource] map: &Map,
     #[resource] camera: &mut Camera,
     ecs: &mut SubWorld,
