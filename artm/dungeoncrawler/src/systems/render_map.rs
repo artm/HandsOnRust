@@ -1,9 +1,9 @@
 use crate::prelude::*;
 
 #[system]
-pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
+pub fn render_map(#[resource] map: &Map, #[resource] camera: &Camera) {
     let mut draw_batch = DrawBatch::new();
-    draw_batch.target(0);
+    draw_batch.target(LAYER_MAP);
 
     let x1 = i32::max(0, camera.fov.x1);
     let x2 = i32::min(WORLD_WIDTH - 1, camera.fov.x2);

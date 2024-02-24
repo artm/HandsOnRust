@@ -1,11 +1,11 @@
 mod collisions;
 mod end_turn;
-mod entity_render;
-mod map_render;
 mod motion;
 mod player_input;
 mod random_walk;
+mod render_entities;
 mod render_hud;
+mod render_map;
 mod render_tooltips;
 
 use crate::prelude::*;
@@ -14,8 +14,8 @@ pub fn build_input_scheduler() -> Schedule {
     Schedule::builder()
         .add_system(player_input::player_input_system())
         .flush()
-        .add_system(map_render::map_render_system())
-        .add_system(entity_render::entity_render_system())
+        .add_system(render_map::render_map_system())
+        .add_system(render_entities::render_entities_system())
         .add_system(render_hud::render_hud_system())
         .add_system(render_tooltips::render_tooltips_system())
         .build()
@@ -27,8 +27,8 @@ pub fn build_player_scheduler() -> Schedule {
         .flush()
         .add_system(collisions::collisions_system())
         .flush()
-        .add_system(map_render::map_render_system())
-        .add_system(entity_render::entity_render_system())
+        .add_system(render_map::render_map_system())
+        .add_system(render_entities::render_entities_system())
         .add_system(render_hud::render_hud_system())
         .add_system(render_tooltips::render_tooltips_system())
         .add_system(end_turn::end_turn_system())
@@ -41,8 +41,8 @@ pub fn build_monsters_scheduler() -> Schedule {
         .flush()
         .add_system(motion::motion_system())
         .flush()
-        .add_system(map_render::map_render_system())
-        .add_system(entity_render::entity_render_system())
+        .add_system(render_map::render_map_system())
+        .add_system(render_entities::render_entities_system())
         .add_system(render_hud::render_hud_system())
         .add_system(render_tooltips::render_tooltips_system())
         .add_system(end_turn::end_turn_system())

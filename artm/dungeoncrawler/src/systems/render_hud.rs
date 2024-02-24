@@ -10,7 +10,7 @@ pub fn render_hud(ecs: &mut SubWorld) {
         .expect("There is always one player");
 
     let mut draw_batch = DrawBatch::new();
-    draw_batch.target(2);
+    draw_batch.target(LAYER_HUD);
     draw_batch.bar_horizontal(
         Point::zero(),
         HUD_WIDTH,

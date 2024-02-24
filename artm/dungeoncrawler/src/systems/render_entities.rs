@@ -3,9 +3,9 @@ use crate::prelude::*;
 #[system]
 #[read_component(Point)]
 #[read_component(Render)]
-pub fn entity_render(ecs: &mut SubWorld, #[resource] camera: &mut Camera) {
+pub fn render_entities(ecs: &mut SubWorld, #[resource] camera: &mut Camera) {
     let mut draw_batch = DrawBatch::new();
-    draw_batch.target(1);
+    draw_batch.target(LAYER_CHARACTERS);
 
     let offset = Point::new(camera.fov.x1, camera.fov.y1);
     let mut entities = <(&Point, &Render)>::query();

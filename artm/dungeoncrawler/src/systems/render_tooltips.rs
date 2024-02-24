@@ -8,7 +8,7 @@ pub fn render_tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point, #[resource
     let offset = Point::new(camera.fov.x1, camera.fov.y1);
     let map_pos = *mouse_pos + offset;
     let mut draw_batch = DrawBatch::new();
-    draw_batch.target(2);
+    draw_batch.target(LAYER_HUD);
     <(Entity, &Point, &Name)>::query()
         .iter(ecs)
         .filter(|(_, pos, _)| **pos == map_pos)
