@@ -9,12 +9,9 @@ pub fn random_walk(ecs: &mut SubWorld, commands: &mut CommandBuffer) {
         .iter(ecs)
         .for_each(|(entity, pos, _)| {
             let delta = DIRS[rand.range(0, 4)];
-            commands.push((
-                (),
-                MotionIntent {
-                    entity: *entity,
-                    destination: *pos + delta,
-                },
-            ));
+            commands.push((MotionIntent {
+                entity: *entity,
+                destination: *pos + delta,
+            },));
         });
 }
