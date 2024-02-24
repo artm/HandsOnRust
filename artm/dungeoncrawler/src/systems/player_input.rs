@@ -4,6 +4,7 @@ use crate::prelude::*;
 #[read_component(Point)]
 #[read_component(Player)]
 #[read_component(Enemy)]
+#[write_component(Health)]
 pub fn player_input(
     ecs: &mut SubWorld,
     #[resource] key: &Option<VirtualKeyCode>,
@@ -18,12 +19,12 @@ pub fn player_input(
             VirtualKeyCode::Down => DIR_DOWN,
             _ => Point::zero(),
         };
+        let (player_entity, destination) = <(Entity, &Point, &Player)>::query()
+            .iter(ecs)
+            .map(|(entity, pos, _)| (*entity, *pos + delta))
+            .next()
+            .expect("Player exists and has position");
         if delta.x != 0 || delta.y != 0 {
-            let (player_entity, destination) = <(Entity, &Point, &Player)>::query()
-                .iter(ecs)
-                .map(|(entity, pos, _)| (*entity, *pos + delta))
-                .next()
-                .expect("Player exists and has position");
             let mut attacking = false;
             <(Entity, &Point)>::query()
                 .filter(component::<Enemy>())
@@ -43,6 +44,12 @@ pub fn player_input(
                     destination,
                 },));
             }
+        } else if let Ok(health) = ecs
+            .entry_mut(player_entity)
+            .unwrap()
+            .get_component_mut::<Health>()
+        {
+            health.current = i32::min(health.max, health.current + 1);
         }
         *turn = Turn::PlayerTurn;
     }
