@@ -15,8 +15,18 @@ HUD
         and display a bar
         schedule it
 
+## monster health
+
+name component
+attach health and name to enemies
+    based on prototype constructors
+new resource: mouse coords
+tooltip system
+    shows name and/or health
+    search for monsters at mouse coords
+
 # refactor
 
-name render systems render_...
+name render systems render_
 const for layer indices
 const for num layers

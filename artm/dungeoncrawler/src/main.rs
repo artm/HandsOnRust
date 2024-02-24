@@ -73,6 +73,8 @@ impl GameState for State {
             ctx.set_active_console(i);
             ctx.cls();
         }
+        ctx.set_active_console(0); // use map coordinates for mouse pos
+        self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
         self.resources.insert(ctx.key);
         let turn = self.resources.get::<Turn>().unwrap().clone();
         match turn {

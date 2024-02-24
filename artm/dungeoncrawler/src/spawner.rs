@@ -1,6 +1,34 @@
 use crate::prelude::*;
 
-const ENEMY_SPRITES: [char; 4] = ['E', 'O', 'o', 'g'];
+#[derive(Clone, Debug, PartialEq)]
+struct ProtoMonster {
+    name: &'static str,
+    max_health: i32,
+    glyph: char,
+}
+
+const PROTO_MONSTERS: [ProtoMonster; 4] = [
+    ProtoMonster {
+        name: "Eton",
+        max_health: 8,
+        glyph: 'E',
+    },
+    ProtoMonster {
+        name: "Ogre",
+        max_health: 4,
+        glyph: 'O',
+    },
+    ProtoMonster {
+        name: "Orc",
+        max_health: 2,
+        glyph: 'o',
+    },
+    ProtoMonster {
+        name: "Goblin",
+        max_health: 1,
+        glyph: 'g',
+    },
+];
 
 pub fn spawn_player(world: &mut World, pos: Point) {
     world.push((
@@ -18,11 +46,10 @@ pub fn spawn_player(world: &mut World, pos: Point) {
 }
 
 pub fn spawn_enemy(world: &mut World, pos: Point, rand: &mut RandomNumberGenerator) {
-    let glyph = to_cp437(
-        *rand
-            .random_slice_entry(&ENEMY_SPRITES)
-            .expect("ENEMY_SPRITES isn't empty"),
-    );
+    let proto = rand
+        .random_slice_entry(&PROTO_MONSTERS)
+        .expect("PROTO_MONSTERS isn't empty")
+        .clone();
 
     world.push((
         Enemy,
@@ -30,7 +57,12 @@ pub fn spawn_enemy(world: &mut World, pos: Point, rand: &mut RandomNumberGenerat
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),
-            glyph,
+            glyph: to_cp437(proto.glyph),
+        },
+        Name(proto.name.into()),
+        Health {
+            current: proto.max_health,
+            max: proto.max_health,
         },
     ));
 }
