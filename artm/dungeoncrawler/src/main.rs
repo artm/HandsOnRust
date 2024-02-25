@@ -52,6 +52,7 @@ impl State {
         map_builder.build(&mut rand);
         let mut resources = Resources::default();
         spawn_player(&mut world, map_builder.player_pos);
+        spawn_amulet_of_yala(&mut world, map_builder.amulet_pos);
         map_builder
             .chambers
             .iter()
@@ -78,6 +79,7 @@ impl State {
         map_builder.build(&mut rand);
         let mut resources = Resources::default();
         spawn_player(&mut world, map_builder.player_pos);
+        spawn_amulet_of_yala(&mut world, map_builder.amulet_pos);
         map_builder
             .chambers
             .iter()
@@ -98,6 +100,21 @@ impl State {
         ctx.print_color_centered(9, ORANGE, BLACK, "Better luck next time");
         ctx.print_color_centered(11, GREEN, BLACK, "(R)eincarnate");
         ctx.print_color_centered(13, GREY50, BLACK, "(Q)uit trying");
+        if let Some(key) = ctx.key {
+            match key {
+                VirtualKeyCode::R => self.restart(),
+                VirtualKeyCode::Q => ctx.quit(),
+                _ => (),
+            }
+        }
+    }
+
+    fn victory(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(LAYER_HUD);
+        ctx.print_color_centered(7, WHITE, BLACK, "Rejoyce!");
+        ctx.print_color_centered(9, ORANGE, BLACK, "The Amulet of Yala is yours at last!");
+        ctx.print_color_centered(11, GREEN, BLACK, "(R)eincarnate");
+        ctx.print_color_centered(13, GREY50, BLACK, "(Q)uit");
         if let Some(key) = ctx.key {
             match key {
                 VirtualKeyCode::R => self.restart(),
@@ -129,7 +146,7 @@ impl GameState for State {
                 .monsters_schedule
                 .execute(&mut self.world, &mut self.resources),
             Turn::GameOver => self.game_over(ctx),
-            _ => todo!(),
+            Turn::Victory => self.victory(ctx),
         }
         render_draw_buffer(ctx).expect("Render error");
     }

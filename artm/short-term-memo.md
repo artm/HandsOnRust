@@ -7,6 +7,18 @@ render gameover screen
 
 ## winning
 
+tag: item
+tag: amulet of Yala
+spawner: amulet of Yala
+    item
+    amulet of Yala
+    pos
+    render
+seed w/Dijkstra map
+
+turn: victory
+end turn: detect stepping on the amulet
+render victory screen
 
 # learn
 

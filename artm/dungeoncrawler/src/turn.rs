@@ -4,4 +4,5 @@ pub enum Turn {
     Player,
     Enemies,
     GameOver,
+    Victory,
 }

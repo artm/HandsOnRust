@@ -11,6 +11,7 @@ pub struct MapBuilder {
     pub map: Map,
     pub chambers: Vec<Rect>,
     pub player_pos: Point,
+    pub amulet_pos: Point,
 }
 
 impl MapBuilder {
@@ -18,7 +19,8 @@ impl MapBuilder {
         Self {
             map: Map::new(),
             chambers: vec![],
-            player_pos: Point::new(WORLD_WIDTH / 2, WORLD_HEIGHT / 2),
+            player_pos: Point::zero(),
+            amulet_pos: Point::zero(),
         }
     }
 
@@ -64,6 +66,27 @@ impl MapBuilder {
             }
         }
         self.player_pos = self.chambers[0].center();
+        let dijkstra_map = DijkstraMap::new(
+            WORLD_WIDTH,
+            WORLD_HEIGHT,
+            &[self.map.point_idx(self.player_pos)],
+            &self.map,
+            1000.0,
+        );
+        const UNREACHABLE: f32 = f32::MAX;
+        self.amulet_pos = self.map.idx_point(
+            dijkstra_map
+                .map
+                .iter()
+                .enumerate()
+                .filter(|(_, d)| **d < UNREACHABLE)
+                .max_by(|a, b| {
+                    a.1.partial_cmp(b.1)
+                        .expect("Two Dijkstra map entries have numeric distances")
+                })
+                .expect("There is a furtherst tile")
+                .0,
+        );
     }
 
     fn fill(&mut self, rect: Rect, filler: TileType) {

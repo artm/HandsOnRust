@@ -66,3 +66,15 @@ pub fn spawn_enemy(world: &mut World, pos: Point, rand: &mut RandomNumberGenerat
         },
     ));
 }
+
+pub fn spawn_amulet_of_yala(world: &mut World, pos: Point) {
+    world.push((
+        Item,
+        AmuletOfYala,
+        pos,
+        Render {
+            color: ColorPair::new(WHITE, BLACK),
+            glyph: to_cp437('|'),
+        },
+    ));
+}
