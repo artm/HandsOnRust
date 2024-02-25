@@ -39,7 +39,7 @@ pub fn spawn_player(world: &mut World, pos: Point) {
             glyph: to_cp437('@'),
         },
         Health {
-            current: 15,
+            current: 20,
             max: 20,
         },
     ));
