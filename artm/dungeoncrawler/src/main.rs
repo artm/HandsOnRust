@@ -69,6 +69,43 @@ impl State {
             monsters_schedule: build_monsters_scheduler(),
         }
     }
+
+    fn restart(&mut self) {
+        // FIXME dont repeat myself
+        let mut rand = RandomNumberGenerator::new();
+        let mut world = World::default();
+        let mut map_builder = MapBuilder::new();
+        map_builder.build(&mut rand);
+        let mut resources = Resources::default();
+        spawn_player(&mut world, map_builder.player_pos);
+        map_builder
+            .chambers
+            .iter()
+            .skip(1)
+            .map(|chamber| chamber.center())
+            .for_each(|pos| spawn_enemy(&mut world, pos, &mut rand));
+        resources.insert(map_builder.map);
+        resources.insert(Camera::new(map_builder.player_pos));
+        resources.insert(Turn::ExpectingInput);
+        self.world = world;
+        self.resources = resources;
+    }
+
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(LAYER_HUD);
+        ctx.print_color_centered(5, WHITE, BLACK, "Game Over");
+        ctx.print_color_centered(7, RED, BLACK, "Slain before achieving objective");
+        ctx.print_color_centered(9, ORANGE, BLACK, "Better luck next time");
+        ctx.print_color_centered(11, GREEN, BLACK, "(R)eincarnate");
+        ctx.print_color_centered(13, GREY50, BLACK, "(Q)uit trying");
+        if let Some(key) = ctx.key {
+            match key {
+                VirtualKeyCode::R => self.restart(),
+                VirtualKeyCode::Q => ctx.quit(),
+                _ => (),
+            }
+        }
+    }
 }
 
 impl GameState for State {
@@ -91,6 +128,8 @@ impl GameState for State {
             Turn::Enemies => self
                 .monsters_schedule
                 .execute(&mut self.world, &mut self.resources),
+            Turn::GameOver => self.game_over(ctx),
+            _ => todo!(),
         }
         render_draw_buffer(ctx).expect("Render error");
     }

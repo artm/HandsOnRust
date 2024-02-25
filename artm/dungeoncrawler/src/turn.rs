@@ -3,4 +3,5 @@ pub enum Turn {
     ExpectingInput,
     Player,
     Enemies,
+    GameOver,
 }
