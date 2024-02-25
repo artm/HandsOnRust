@@ -53,7 +53,7 @@ pub fn spawn_enemy(world: &mut World, pos: Point, rand: &mut RandomNumberGenerat
 
     world.push((
         Enemy,
-        RandomWalk,
+        ChasingPlayer,
         pos,
         Render {
             color: ColorPair::new(WHITE, BLACK),

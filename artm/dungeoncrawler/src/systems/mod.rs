@@ -1,8 +1,8 @@
+mod chase;
 mod combat;
 mod end_turn;
 mod motion;
 mod player_input;
-mod random_walk;
 mod render_entities;
 mod render_hud;
 mod render_map;
@@ -36,7 +36,7 @@ pub fn build_player_scheduler() -> Schedule {
 
 pub fn build_monsters_scheduler() -> Schedule {
     Schedule::builder()
-        .add_system(random_walk::random_walk_system())
+        .add_system(chase::chase_system())
         .flush()
         .add_system(combat::combat_system())
         .add_system(motion::motion_system())

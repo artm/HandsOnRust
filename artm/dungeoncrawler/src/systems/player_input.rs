@@ -51,6 +51,6 @@ pub fn player_input(
         {
             health.current = i32::min(health.max, health.current + 1);
         }
-        *turn = Turn::PlayerTurn;
+        *turn = Turn::Player;
     }
 }

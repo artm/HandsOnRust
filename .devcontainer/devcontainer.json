@@ -21,7 +21,9 @@
 		"vscode": {
 			"settings": {
 				"editor.formatOnSave": true,
-				"rust-analyzer.check.command": "clippy"
+				"rust-analyzer.check.command": "clippy",
+				"rust-analyzer.check.workspace": false,
+				"editor.inlayHints.enabled": "offUnlessPressed"
 			},
 			"extensions": [
 				"mhutchie.git-graph",

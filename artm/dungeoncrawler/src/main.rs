@@ -80,15 +80,15 @@ impl GameState for State {
         ctx.set_active_console(LAYER_MAP);
         self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
         self.resources.insert(ctx.key);
-        let turn = self.resources.get::<Turn>().unwrap().clone();
+        let turn = *self.resources.get::<Turn>().unwrap();
         match turn {
             Turn::ExpectingInput => self
                 .input_schedule
                 .execute(&mut self.world, &mut self.resources),
-            Turn::PlayerTurn => self
+            Turn::Player => self
                 .player_schedule
                 .execute(&mut self.world, &mut self.resources),
-            Turn::MonstersTurn => self
+            Turn::Enemies => self
                 .monsters_schedule
                 .execute(&mut self.world, &mut self.resources),
         }
