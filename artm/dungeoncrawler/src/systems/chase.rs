@@ -4,9 +4,11 @@ use crate::prelude::*;
 #[read_component(ChasingPlayer)]
 #[read_component(Point)]
 #[read_component(Player)]
+#[read_component(FieldOfView)]
 pub fn chase(ecs: &mut SubWorld, #[resource] map: &Map, commands: &mut CommandBuffer) {
     let mut player = <(&Point, &Player)>::query();
-    let mut chasers = <(Entity, &Point, &ChasingPlayer)>::query();
+    let mut chasers =
+        <(Entity, &Point, &FieldOfView)>::query().filter(component::<ChasingPlayer>());
     let mut positions = <(Entity, &Point)>::query();
 
     let player_pos = *player.iter(ecs).next().unwrap().0;
@@ -14,7 +16,11 @@ pub fn chase(ecs: &mut SubWorld, #[resource] map: &Map, commands: &mut CommandBu
     let search_targets = vec![player_idx];
     let dijkstra_map = DijkstraMap::new(WORLD_WIDTH, WORLD_HEIGHT, &search_targets, map, 1000.0);
 
-    chasers.iter(ecs).for_each(|(entity, pos, _)| {
+    chasers.iter(ecs).for_each(|(entity, pos, fov)| {
+        if !fov.points.contains(&player_pos) {
+            return;
+        }
+
         if let Some(chase_pos_idx) =
             DijkstraMap::find_lowest_exit(&dijkstra_map, map.point_idx(*pos), map)
         {
