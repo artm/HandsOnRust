@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 use crate::prelude::*;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -44,3 +46,28 @@ pub struct Health {
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct Name(pub String);
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct FieldOfView {
+    pub points: HashSet<Point>,
+    pub radius: i32,
+    pub dirty: bool,
+}
+
+impl FieldOfView {
+    pub fn new(radius: i32) -> Self {
+        Self {
+            points: HashSet::new(),
+            radius,
+            dirty: true,
+        }
+    }
+
+    pub fn clone_dirty(&self) -> Self {
+        Self {
+            points: HashSet::new(),
+            radius: self.radius,
+            dirty: true,
+        }
+    }
+}

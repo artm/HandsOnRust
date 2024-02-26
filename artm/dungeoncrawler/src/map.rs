@@ -57,6 +57,10 @@ impl BaseMap for Map {
     fn get_pathing_distance(&self, idx1: usize, idx2: usize) -> f32 {
         DistanceAlg::Pythagoras.distance2d(self.idx_point(idx1), self.idx_point(idx2))
     }
+
+    fn is_opaque(&self, idx: usize) -> bool {
+        self.tiles[idx] != TileType::Floor
+    }
 }
 
 impl Algorithm2D for Map {
