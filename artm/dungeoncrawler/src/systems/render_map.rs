@@ -19,19 +19,23 @@ pub fn render_map(ecs: &SubWorld, #[resource] map: &Map, #[resource] camera: &Ca
         .next()
         .expect("There is always a player with field of view");
 
-    for x in x1..=x2 {
-        for y in y1..=y2 {
+    for y in y1..=y2 {
+        for x in x1..=x2 {
             let pos = Point::new(x, y);
             if let Some(i) = map.try_idx(pos) {
-                if !fov.points.contains(&pos) {
+                let color = if fov.points.contains(&pos) {
+                    WHITE
+                } else if map.seen[i] {
+                    DARKGREY
+                } else {
                     continue;
-                }
+                };
                 let tile = map.tiles[i];
                 let glyph = match tile {
                     TileType::Wall => to_cp437('#'),
                     TileType::Floor => to_cp437('.'),
                 };
-                draw_batch.set(pos - offset, ColorPair::new(WHITE, BLACK), glyph);
+                draw_batch.set(pos - offset, ColorPair::new(color, BLACK), glyph);
             }
         }
     }

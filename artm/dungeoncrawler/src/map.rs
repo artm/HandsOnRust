@@ -10,12 +10,14 @@ pub enum TileType {
 
 pub struct Map {
     pub tiles: Vec<TileType>,
+    pub seen: Vec<bool>,
 }
 
 impl Map {
     pub fn new() -> Self {
         Self {
             tiles: vec![TileType::Floor; NUM_TILES],
+            seen: vec![false; NUM_TILES],
         }
     }
 
