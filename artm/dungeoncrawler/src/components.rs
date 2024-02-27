@@ -70,4 +70,8 @@ impl FieldOfView {
             dirty: true,
         }
     }
+
+    pub fn can_see(&self, pos: &Point) -> bool {
+        self.points.contains(pos)
+    }
 }

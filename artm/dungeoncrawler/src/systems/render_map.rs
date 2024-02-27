@@ -23,7 +23,7 @@ pub fn render_map(ecs: &SubWorld, #[resource] map: &Map, #[resource] camera: &Ca
         for x in x1..=x2 {
             let pos = Point::new(x, y);
             if let Some(i) = map.try_idx(pos) {
-                let color = if fov.points.contains(&pos) {
+                let color = if fov.can_see(&pos) {
                     WHITE
                 } else if map.seen[i] {
                     DARKGREY

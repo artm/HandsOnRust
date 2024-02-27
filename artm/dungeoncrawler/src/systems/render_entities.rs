@@ -18,7 +18,7 @@ pub fn render_entities(ecs: &mut SubWorld, #[resource] camera: &mut Camera) {
     let mut entities = <(&Point, &Render)>::query();
     entities
         .iter(ecs)
-        .filter(|(pos, _)| fov.points.contains(*pos))
+        .filter(|(pos, _)| fov.can_see(pos))
         .for_each(|(pos, render)| {
             draw_batch.set(*pos - offset, render.color, render.glyph);
         });

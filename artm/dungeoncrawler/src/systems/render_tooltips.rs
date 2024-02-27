@@ -18,7 +18,7 @@ pub fn render_tooltips(ecs: &SubWorld, #[resource] mouse_pos: &Point, #[resource
         .expect("There is always a player with field of view");
     <(Entity, &Point, &Name)>::query()
         .iter(ecs)
-        .filter(|(_, pos, _)| **pos == map_pos && fov.points.contains(*pos))
+        .filter(|(_, pos, _)| **pos == map_pos && fov.can_see(pos))
         .for_each(|(entity, _, name)| {
             let hud_pos = *mouse_pos * 4 + Point::new(2, -2);
             let tip = if let Ok(health) = ecs.entry_ref(*entity).unwrap().get_component::<Health>()

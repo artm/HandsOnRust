@@ -17,7 +17,7 @@ pub fn chase(ecs: &mut SubWorld, #[resource] map: &Map, commands: &mut CommandBu
     let dijkstra_map = DijkstraMap::new(WORLD_WIDTH, WORLD_HEIGHT, &search_targets, map, 1000.0);
 
     chasers.iter(ecs).for_each(|(entity, pos, fov)| {
-        if !fov.points.contains(&player_pos) {
+        if !fov.can_see(&player_pos) {
             return;
         }
 
