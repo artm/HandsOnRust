@@ -1,15 +1,6 @@
-# chase system
+# new builders
 
-## field of view
-
-enemies chase only when they see the player
-player map memory
-
-# refactor
-
-fov.can_see(point)
-
-# learn
-
-same method name in different impls for same type
-
+make map_builer a dir module with mod.rs
+test harness
+    but what's the difference with the game?
+init the empty map generator

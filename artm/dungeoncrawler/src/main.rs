@@ -48,17 +48,14 @@ impl State {
     fn new() -> Self {
         let mut rand = RandomNumberGenerator::new();
         let mut world = World::default();
-        let mut map_builder = MapBuilder::new();
-        map_builder.build(&mut rand);
+        let map_builder = MapBuilder::new(&mut rand);
         let mut resources = Resources::default();
         spawn_player(&mut world, map_builder.player_pos);
         spawn_amulet_of_yala(&mut world, map_builder.amulet_pos);
         map_builder
-            .chambers
+            .enemy_spawns
             .iter()
-            .skip(1)
-            .map(|chamber| chamber.center())
-            .for_each(|pos| spawn_enemy(&mut world, pos, &mut rand));
+            .for_each(|pos| spawn_enemy(&mut world, *pos, &mut rand));
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_pos));
         resources.insert(Turn::ExpectingInput);
@@ -75,17 +72,14 @@ impl State {
         // FIXME dont repeat myself
         let mut rand = RandomNumberGenerator::new();
         let mut world = World::default();
-        let mut map_builder = MapBuilder::new();
-        map_builder.build(&mut rand);
+        let map_builder = MapBuilder::new(&mut rand);
         let mut resources = Resources::default();
         spawn_player(&mut world, map_builder.player_pos);
         spawn_amulet_of_yala(&mut world, map_builder.amulet_pos);
         map_builder
-            .chambers
+            .enemy_spawns
             .iter()
-            .skip(1)
-            .map(|chamber| chamber.center())
-            .for_each(|pos| spawn_enemy(&mut world, pos, &mut rand));
+            .for_each(|pos| spawn_enemy(&mut world, *pos, &mut rand));
         resources.insert(map_builder.map);
         resources.insert(Camera::new(map_builder.player_pos));
         resources.insert(Turn::ExpectingInput);
