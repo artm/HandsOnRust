@@ -54,3 +54,16 @@ pub fn build_monsters_scheduler() -> Schedule {
         .add_system(end_turn::end_turn_system())
         .build()
 }
+
+pub fn build_demo_scheduler() -> Schedule {
+    Schedule::builder()
+        .add_system(player_input::player_input_system())
+        .flush()
+        .add_system(motion::motion_system())
+        .flush()
+        .add_system(vision::vision_system())
+        .flush()
+        .add_system(render_map::render_demo_map_system())
+        .add_system(render_entities::render_demo_entities_system())
+        .build()
+}

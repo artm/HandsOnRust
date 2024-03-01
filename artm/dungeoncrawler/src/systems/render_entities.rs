@@ -25,3 +25,18 @@ pub fn render_entities(ecs: &mut SubWorld, #[resource] camera: &mut Camera) {
 
     draw_batch.submit(5000).expect("Batch error");
 }
+
+#[system]
+#[read_component(Point)]
+#[read_component(Render)]
+pub fn render_demo_entities(ecs: &mut SubWorld) {
+    let mut draw_batch = DrawBatch::new();
+    draw_batch.target(LAYER_CHARACTERS);
+
+    let mut entities = <(&Point, &Render)>::query();
+    entities.iter(ecs).for_each(|(pos, render)| {
+        draw_batch.set(*pos, render.color, render.glyph);
+    });
+
+    draw_batch.submit(10000).expect("Batch error");
+}
