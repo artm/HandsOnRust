@@ -3,7 +3,6 @@ mod rectrooms;
 
 use crate::prelude::*;
 
-use self::empty::EmptyArchitect;
 use self::rectrooms::RectroomArchitect;
 
 trait MapArchitect {
