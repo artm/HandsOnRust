@@ -2,7 +2,7 @@
 
 ## test harness (bin/demo)
 
-split lib and bin/game
+split lib and main
 bin/demo
 make demo progressively simpler
 
