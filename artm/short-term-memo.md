@@ -1,11 +1,5 @@
 # new builders
 
-## test harness (bin/demo)
-
-split lib and main
-bin/demo
-make demo progressively simpler
-
 ## cellular automata architect
 
 seed with noise
@@ -19,3 +13,8 @@ place enemies
 build a map
     wasn't I builting the whole time?
 call from main
+
+
+## consider refactoring
+
+put placement methods into map builder for reuse
