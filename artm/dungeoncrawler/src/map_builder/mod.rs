@@ -5,8 +5,6 @@ mod rectrooms;
 
 use crate::prelude::*;
 
-use self::drunkard::DrunkardArchitect;
-
 trait MapArchitect {
     fn build(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
 
@@ -62,7 +60,11 @@ pub struct MapBuilder {
 
 impl MapBuilder {
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = DrunkardArchitect {};
+        let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
+            0 => Box::new(rectrooms::RectroomArchitect {}),
+            1 => Box::new(cellular_automata::CellularAutomataArchitect {}),
+            _ => Box::new(drunkard::DrunkardArchitect {}),
+        };
         architect.build(rng)
     }
 
