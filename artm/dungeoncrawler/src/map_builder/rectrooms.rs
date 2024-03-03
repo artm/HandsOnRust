@@ -11,7 +11,7 @@ const MAX_CHAMBER_HEIGHT: i32 = WORLD_HEIGHT / 3;
 pub struct RectroomArchitect {}
 
 impl MapArchitect for RectroomArchitect {
-    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    fn build(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
         let mut mb = MapBuilder {
             map: Map::new(),
             chambers: vec![],

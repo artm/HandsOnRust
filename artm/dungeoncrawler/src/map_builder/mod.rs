@@ -7,7 +7,7 @@ use crate::prelude::*;
 use self::cellular_automata::CellularAutomataArchitect;
 
 trait MapArchitect {
-    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+    fn build(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
 }
 
 pub struct MapBuilder {
@@ -21,7 +21,7 @@ pub struct MapBuilder {
 impl MapBuilder {
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
         let mut architect = CellularAutomataArchitect {};
-        architect.new(rng)
+        architect.build(rng)
     }
 
     fn fill(&mut self, rect: Rect, filler: TileType) {

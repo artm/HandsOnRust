@@ -4,7 +4,7 @@ use crate::prelude::*;
 pub struct EmptyArchitect {}
 
 impl MapArchitect for EmptyArchitect {
-    fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    fn build(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
         let mut mb = MapBuilder {
             map: Map::new(),
             chambers: vec![],
