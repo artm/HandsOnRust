@@ -17,4 +17,5 @@ call from main
 
 ## consider refactoring
 
+make architect follow the builder pattern
 put placement methods into map builder for reuse

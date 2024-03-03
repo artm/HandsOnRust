@@ -14,6 +14,7 @@ pub struct Map {
 }
 
 impl Map {
+    #[allow(clippy::new_without_default)]
     pub fn new() -> Self {
         Self {
             tiles: vec![TileType::Floor; NUM_TILES],

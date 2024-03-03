@@ -1,5 +1,3 @@
-use itertools::Itertools;
-
 use super::MapArchitect;
 use crate::prelude::*;
 
@@ -37,15 +35,15 @@ impl CellularAutomataArchitect {
             .count()
     }
 
-    fn conway(&self, rng: &mut RandomNumberGenerator, map: &mut Map) {
-        let mut next = map.tiles.clone();
+    fn conway(&self, map: &mut Map) {
+        let mut next: Vec<TileType> = Vec::new();
         for i in 0..map.tiles.len() {
             let cnt = self.count_neighbours(&map.tiles, i);
-            next[i] = if cnt > 0 && cnt < 5 {
+            next.push(if cnt > 0 && cnt < 5 {
                 TileType::Floor
             } else {
                 TileType::Wall
-            }
+            });
         }
         map.tiles = next;
     }
@@ -55,7 +53,7 @@ impl CellularAutomataArchitect {
         map.tiles
             .iter()
             .enumerate()
-            .filter(|(i, tile)| **tile == TileType::Floor)
+            .filter(|(_, tile)| **tile == TileType::Floor)
             .map(|(i, _)| {
                 let p = map.idx_point(i);
                 (p, DistanceAlg::Pythagoras.distance2d(p, center))
@@ -80,11 +78,11 @@ impl CellularAutomataArchitect {
                 let p = map.idx_point(idx);
                 (p, DistanceAlg::Pythagoras.distance2d(p, player_pos))
             })
-            .filter(|(p, d)| *d > 10.0)
+            .filter(|(_, d)| *d > 10.0)
             .map(|(p, _)| p)
             .collect::<Vec<Point>>();
         let mut enemy_pos: Vec<Point> = Vec::new();
-        for i in 0..50 {
+        for _ in 0..50 {
             let idx = rng.random_slice_index(&tiles).unwrap();
             enemy_pos.push(tiles.remove(idx));
         }
@@ -104,7 +102,7 @@ impl MapArchitect for CellularAutomataArchitect {
 
         self.random_fill(rng, &mut mb.map);
         for _ in 0..10 {
-            self.conway(rng, &mut mb.map);
+            self.conway(&mut mb.map);
         }
         mb.player_pos = self.find_start(&mb.map);
         mb.amulet_pos = mb.find_most_distant(mb.player_pos);
