@@ -1,13 +1,55 @@
 mod cellular_automata;
+mod drunkard;
 mod empty;
 mod rectrooms;
 
 use crate::prelude::*;
 
-use self::cellular_automata::CellularAutomataArchitect;
+use self::drunkard::DrunkardArchitect;
 
 trait MapArchitect {
     fn build(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+
+    fn find_start(&self, map: &Map) -> Point {
+        let center = Point::new(WORLD_WIDTH / 2, WORLD_HEIGHT / 2);
+        map.tiles
+            .iter()
+            .enumerate()
+            .filter(|(_, tile)| **tile == TileType::Floor)
+            .map(|(i, _)| {
+                let p = map.idx_point(i);
+                (p, DistanceAlg::Pythagoras.distance2d(p, center))
+            })
+            .min_by(|(_, a), (_, b)| a.partial_cmp(b).unwrap())
+            .map(|(p, _)| p)
+            .unwrap()
+    }
+
+    fn place_enemies(
+        &self,
+        rng: &mut RandomNumberGenerator,
+        map: &Map,
+        player_pos: Point,
+    ) -> Vec<Point> {
+        let mut tiles = map
+            .tiles
+            .iter()
+            .enumerate()
+            .filter(|(_, tile)| **tile == TileType::Floor)
+            .map(|(idx, _)| {
+                let p = map.idx_point(idx);
+                (p, DistanceAlg::Pythagoras.distance2d(p, player_pos))
+            })
+            .filter(|(_, d)| *d > 10.0)
+            .map(|(p, _)| p)
+            .collect::<Vec<Point>>();
+        let mut enemy_pos: Vec<Point> = Vec::new();
+        for _ in 0..usize::min(50, tiles.len()) {
+            let idx = rng.random_slice_index(&tiles).unwrap();
+            enemy_pos.push(tiles.remove(idx));
+        }
+        enemy_pos
+    }
 }
 
 pub struct MapBuilder {
@@ -20,7 +62,7 @@ pub struct MapBuilder {
 
 impl MapBuilder {
     pub fn new(rng: &mut RandomNumberGenerator) -> Self {
-        let mut architect = CellularAutomataArchitect {};
+        let mut architect = DrunkardArchitect {};
         architect.build(rng)
     }
 
